@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@clerk/express": "^1.7.16",
+    "@clerk/express": "^1.7.21",
     "axios": "^1.11.0",
     "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
@@ -20,6 +20,9 @@
     "express": "^5.1.0",
     "inngest": "^3.40.1",
     "mongoose": "^8.17.1",
-    "nodemon": "^3.1.10"
+    "nodemailer": "^7.0.5",
+    "nodemon": "^3.1.10",
+    "stripe": "^18.4.0",
+    "svix": "^1.73.0"
   }
 }

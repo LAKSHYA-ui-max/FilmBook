@@ -1,12 +1,13 @@
 import axios from "axios"
 import Movie from "../models/Movie.js";
 import Show from "../models/Show.js";
+import { inngest } from "../inngest/index.js";
 
 //API to get now playing movies from TMDB API
 export const getNowPlayingMovies = async (req, res) =>{
     try {
-        const {data} = await axios.get('', {
-            headers : {Authorization : `Bearer $`}
+        const {data} = await axios.get('https://api.themoviedb.org/3/movie/now_playing', {
+            headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
         })
 
         const movies = data.results;
@@ -29,11 +30,11 @@ export const addShow = async (req, res)=>{
         {
             //Fetch movie details and credits from TMDB API
             const[movieDetailsResponse, movieCreditsResponse] = await Promise.all([
-                axios.get(``,{            
-                    headers : {Authorization : `Bearer $`}
+                axios.get(`https://api.themoviedb.org/3/movie/${movieId}`,{            
+                    headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
                 }),
-                axios.get(``, {
-                    headers : {Authorization : `Bearer $`}
+                axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
+                    headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
                 })
             ]);
 
@@ -47,7 +48,7 @@ export const addShow = async (req, res)=>{
                 poster_path : movieApiData.poster_path,
                 backdrop_path : movieApiData.backdrop_path,
                 genres : movieApiData.genres,
-                casts : movieApiData.casts,
+                casts : movieCreditsData.casts,
                 release_date : movieApiData.release_date,
                 original_language : movieApiData.original_language,
                 tagline : movieApiData.tagline || "",
@@ -77,6 +78,12 @@ export const addShow = async (req, res)=>{
         {
             await Show.insertMany(showsToCreate);
         }
+
+        //Trigger Inngest event
+        await inngest.send({
+            name : "app/show.added",
+            data : {movieTitle : movie.title}
+        })
         res.json({success : true, message : 'Show Added successfully.'})
     }catch (error){
         console.error(error)
@@ -87,7 +94,7 @@ export const addShow = async (req, res)=>{
 //API to get all shows from the database
 export const getShows = async (req,res) =>{
     try {
-        const shows = await Show.find({showDataTime : {$gte : new Date()}}).populate('movie').sort({showDataTime : 1});
+        const shows = await Show.find({showDateTime : {$gte : new Date()}}).populate('movie').sort({showDateTime : 1});
 
         //filter unique shows
         const uniqueShows = new Set(shows.map(show => show.movie))
@@ -104,17 +111,17 @@ export const getShow = async (req,res) =>{
     try {
         const {movieId} = req.params;
         //get all upcoming shows for the movie
-        const shows = await Show.find({movie : movieId, showDataTime : {$gte: new Date()}}) 
+        const shows = await Show.find({movie : movieId, showDateTime : {$gte: new Date()}}) 
 
         const movie = await Movie.findById(movieId);
         const dateTime = {};
 
         shows.forEach((show) => {
-            const date = show.showDataTime.toISOString().split("T")[0];
+            const date = show.showDateTime.toISOString().split("T")[0];
             if  (!dateTime[date]){
-                dateTime[data] = []
+                dateTime[date] = []
             }
-            dateTime[date].push({time : show.showDataTime, showId : show._id})
+            dateTime[date].push({time : show.showDateTime, showId : show._id})
         })
         res.json({success : true, movie,dateTime})
 
