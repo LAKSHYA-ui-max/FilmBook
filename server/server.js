@@ -28,4 +28,5 @@ app.use('/api/show', showRouter)
 app.use('/api/booking', bookingRouter)
 app.use('/api/admin', adminRouter)
 
-app.listen(port, ()=> console.log(`server listening at http://localhost:${port}`))
+export default app
+//app.listen(port, ()=> console.log(`server listening at http://localhost:${port}`))
