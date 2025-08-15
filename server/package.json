@@ -10,7 +10,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@clerk/express": "^1.7.21",
     "axios": "^1.11.0",
@@ -24,5 +23,7 @@
     "nodemon": "^3.1.10",
     "stripe": "^18.4.0",
     "svix": "^1.73.0"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
