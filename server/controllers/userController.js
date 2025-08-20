@@ -10,7 +10,7 @@ export const getUserBookings = async (req, res) =>{
         const bookings = await Booking.find({user}).populate({
             path : "show",
             populate : {path : "movie"}
-        }).sort({createAt : -1})
+        }).sort({createdAt : -1})
         res.json({success : true, bookings})
     } catch (error) {
         console.error(error.message);
@@ -36,7 +36,7 @@ export const updateFavorite = async (req, res) =>{
             user.privateMetadata.favorites = user.privateMetadata.favorites.filter(item =>item !== movieId)
         }
 
-        await clerkClient.users.updateUserMetadata(userId, {privateMetadata : userprivateMetadata})
+        await clerkClient.users.updateUserMetadata(userId, {privateMetadata : user.privateMetadata})
 
         res.json({success : true, message : "Favorite movies updated"})
 

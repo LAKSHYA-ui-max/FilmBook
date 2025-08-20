@@ -3,12 +3,11 @@ import Movie from "../models/Movie.js";
 import Show from "../models/Show.js";
 import { inngest } from "../inngest/index.js";
 
+
 //API to get now playing movies from TMDB API
 export const getNowPlayingMovies = async (req, res) =>{
     try {
-        const {data} = await axios.get('https://api.themoviedb.org/3/movie/now_playing', {
-            headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
-        })
+        const {data} = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_API_KEY}`)
 
         const movies = data.results;
         res.json({success : true, movies : movies})
@@ -30,12 +29,9 @@ export const addShow = async (req, res)=>{
         {
             //Fetch movie details and credits from TMDB API
             const[movieDetailsResponse, movieCreditsResponse] = await Promise.all([
-                axios.get(`https://api.themoviedb.org/3/movie/${movieId}`,{            
-                    headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
-                }),
-                axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-                    headers : {Authorization : `Bearer ${process.env.TMDB_API_KEY}`}
-                })
+                axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}`),
+                axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.TMDB_API_KEY}`)
+
             ]);
 
             const movieApiData = movieDetailsResponse.data;
@@ -48,7 +44,7 @@ export const addShow = async (req, res)=>{
                 poster_path : movieApiData.poster_path,
                 backdrop_path : movieApiData.backdrop_path,
                 genres : movieApiData.genres,
-                casts : movieCreditsData.casts,
+                casts : movieCreditsData.cast,
                 release_date : movieApiData.release_date,
                 original_language : movieApiData.original_language,
                 tagline : movieApiData.tagline || "",
@@ -99,7 +95,7 @@ export const getShows = async (req,res) =>{
         //filter unique shows
         const uniqueShows = new Set(shows.map(show => show.movie))
 
-        res.json({success : true, show : Array.from(uniqueShows)})
+        res.json({success : true, shows : Array.from(uniqueShows)})
     } catch (error){
         console.error(error);
         res.json({success : false, message : error.message})
