@@ -12,7 +12,7 @@ import SeatLayout from './pages/SeatLayout'
 
 import Layout from './pages/admin/Layout'
 import Dashboard from './pages/admin/Dashboard'
-import AddShows from './pages/admin/Addshows'
+import AddShows from './pages/admin/AddShows'
 import ListShows from './pages/admin/ListShows'
 import ListBookings from './pages/admin/ListBookings'
 import { useAppContext } from './context/AppContext'
