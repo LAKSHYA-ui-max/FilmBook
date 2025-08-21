@@ -24,25 +24,40 @@ const Dashboard = () => {
     const [loading , setLoading] = useState(true);
 
     const dashboardCards = [
-        {title:"Total Booking", value: dashboardData.totalBookings || "0", icon: ChartLineIcon},
+        { title: "Total Revenue",
+          value: dashboardData.totalRevenue
+            ? `${currency}${dashboardData.totalRevenue}`
+            : "0",
+        icon: CircleDollarSignIcon
+        },
         {title:"Total Revenue", value: currency + dashboardData.totalRevenue || "0", icon: CircleDollarSignIcon},
         {title:"Active Shows", value: dashboardData.activeShows.length || "0", icon: PlayCircleIcon},
         {title:"Total Users", value: dashboardData.totalUser || "0", icon: UserIcon}
     ]
 
     const fetchDashboardData = async () => {
-        try {
-            const {data} = await axios.get("/api/admin/dashboard", {headers : {Authorization : `Bearer ${await getToken()}`}})
-            if(data.success){
-                setDashboardData(data.dashboardData)
-                setLoading(false)
-            }else{
-                toast.error(data.message)
-            }
-        } catch (error) {
-            toast.error("Error fetching dashboard data : ", error)
-        }
-    };
+  setLoading(true);
+  try {
+    const token = await getToken();
+    const { data } = await axios.get("/api/admin/dashboard", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (data?.success && data?.dashboardData) {
+      setDashboardData(data.dashboardData);
+    } else {
+      toast.error(data?.message || "Failed to load dashboard");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error(
+      err?.response?.data?.message || "Error fetching dashboard data"
+    ); // sirf string pass karo
+  } finally {
+    setLoading(false); // ✅ loader yahin band hoga—success ho ya error
+  }
+};
+
 
     useEffect(()=>{
         if(user){
