@@ -63,6 +63,8 @@ const AddShows = () => {
     try {
       setAddingShow(true)
 
+      console.log("dateTimeSelection", dateTimeSelection);
+
       if(!selectedMovie || Object.keys(dateTimeSelection).length === 0 || !showPrice){
         return toast.error('Missing required fields')
       }
