@@ -65,12 +65,12 @@ const AddShows = () => {
       setAddingShow(true)
 
       if(!selectedMovie || Object.keys(dateTimeSelection).length === 0 || !showPrice){
-        return toast('Missing required fields')
+        return toast.error('Missing required fields')
       }
 
       const payload = {
         movieId : selectedMovie,
-        showsInput,
+        showsInput : dateTimeSelection,
         showPrice : Number(showPrice)
       }
 
@@ -105,7 +105,7 @@ const AddShows = () => {
     <div className='overflow-x-auto pb-4'>
       <div className='group flex flex-wrap gap-4 mt-4 w-max'>
         {nowPlayingMovies.map((movie)=>(
-          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-transsition duration-300`} onClick={()=>setSelectedMovie(movie.id)}>
+          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-transition duration-300`} onClick={()=>setSelectedMovie(movie.id)}>
             <div className='relative rounded-lg overflow-hidden'>
               <img src={image_base_url + movie.poster_path} alt="" className='w-full object-cover brightness-90'/>
               <div className='text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0 '>
