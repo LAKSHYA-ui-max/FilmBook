@@ -24,12 +24,7 @@ const Dashboard = () => {
     const [loading , setLoading] = useState(true);
 
     const dashboardCards = [
-        { title: "Total Revenue",
-          value: dashboardData.totalRevenue
-            ? `${currency}${dashboardData.totalRevenue}`
-            : "0",
-        icon: CircleDollarSignIcon
-        },
+        { title: "Total Revenue", value: currency + dashboardData.totalRevenue || "0",icon: CircleDollarSignIcon },
         {title:"Total Revenue", value: currency + dashboardData.totalRevenue || "0", icon: CircleDollarSignIcon},
         {title:"Active Shows", value: dashboardData.activeShows.length || "0", icon: PlayCircleIcon},
         {title:"Total Users", value: dashboardData.totalUser || "0", icon: UserIcon}
