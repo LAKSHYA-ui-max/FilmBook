@@ -46,7 +46,7 @@ const syncUserUpdation = inngest.createFunction(
             name : first_name + ' ' + last_name,
             image : image_url
         }
-        await User.findByIdAndUpdated(id, userData)
+        await User.findByIdAndUpdate(id, userData)
     }
 )
 
@@ -79,9 +79,12 @@ const releaseSeatsAndDeleteBooking = inngest.createFunction(
 
 //Inngest function to send email when user books a show
 const sendBookingConfirmationEmail = inngest.createFunction(
+    
     {id : "send-booking-confirmation-email"},
     {event : "app/show.booked"},
     async ({event, step})=>{
+        const { bookingId } = event.data;
+
         const booking = await Booking.findById(bookingId).populate({
             path : 'show',
             populate : {path : "movie", model : "Movie"}
@@ -120,7 +123,7 @@ const sendShowReminders = inngest.createFunction(
 
         const reminderTasks = await step.run("prepare-reminder-tasks", async()=>{
             const shows = await Show.find({
-                showTime : {$gte: windowStart, $lte: in8Hours},
+                showDateTime : {$gte: windowStart, $lte: in8Hours},
             }).populate('movie');
 
             const tasks = [];
@@ -138,7 +141,7 @@ const sendShowReminders = inngest.createFunction(
                         userEmail : user.email,
                         userName : user.name,
                         movieTitle : show.movie.title,
-                        showTime : show.showTime,
+                        showDateTime : show.showDateTime,
                     })
                 }
             }
@@ -160,7 +163,7 @@ const sendShowReminders = inngest.createFunction(
                             <p>This is a quick reminder that your movie:</p>
                             <h3 style="color: #F84565;">"${task.movieTitle}"</h3>
                             <p>
-                                is scheduled for <strong>${new Date(task.showTime). toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' })}</strong> at <strong>${new Date(task.showTime).toLocaleTimeString ('en-US', { timeZone: 'Asia/Kolkata' })}</strong>.
+                                is scheduled for <strong>${new Date(task.showDateTime). toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' })}</strong> at <strong>${new Date(task.showDateTime).toLocaleTimeString ('en-US', { timeZone: 'Asia/Kolkata' })}</strong>.
                             </p>
                             <p>It starts in approximately <strong>8 hours</strong>
                             - make sure you're ready!</p>

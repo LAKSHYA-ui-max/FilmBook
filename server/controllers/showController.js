@@ -58,8 +58,8 @@ export const addShow = async (req, res)=>{
 
         const showsToCreate = [];
         showInput.forEach(show => {
-            const showDate = show.data;
-            show.time.forEach((time)=>{
+            const showDate = show.date;
+            show.times.forEach((time)=>{
                 const dateTimeString = `${showDate}T${time}`;
                 showsToCreate.push({
                     movie : movieId,
@@ -93,7 +93,11 @@ export const getShows = async (req,res) =>{
         const shows = await Show.find({showDateTime : {$gte : new Date()}}).populate('movie').sort({showDateTime : 1});
 
         //filter unique shows
-        const uniqueShows = new Set(shows.map(show => show.movie))
+        const uniqueShowsMap = new Map();
+shows.forEach(show => {
+  uniqueShowsMap.set(show.movie._id.toString(), show.movie);
+});
+const uniqueShows = Array.from(uniqueShowsMap.values());
 
         res.json({success : true, shows : Array.from(uniqueShows)})
     } catch (error){

@@ -6,7 +6,7 @@ import stripe from "stripe"
 //Function to check availability of selected seats for a movie
 const checkSeatsAvailability = async (showId, selectedSeats)=>{
     try{
-        const showData = await showId.findById(showId)
+        const showData = await Show.findById(showId)
         if(!showData) return false;
 
         const occupiedSeats = showData.occupiedSeats;
@@ -41,7 +41,7 @@ export const createBooking = async (req,res) =>{
             user : userId,
             show : showId,
             amount : showData.showPrice * selectedSeats.length,
-            bookSeats : selectedSeats
+            bookedSeats : selectedSeats
         })
 
         selectedSeats.map((seat)=>{
@@ -77,7 +77,7 @@ export const createBooking = async (req,res) =>{
             metadata : {
                 bookingId : booking._id.toString()
             },
-            expires_at : Math.floor(Data.now() / 1000) + 30 * 60, //Expires in 30 minutes
+            expires_at : Math.floor(Date.now() / 1000) + 30 * 60, //Expires in 30 minutes
         })
   
         booking.paymentLink = session.url
