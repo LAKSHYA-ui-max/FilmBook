@@ -25,7 +25,7 @@ const Dashboard = () => {
 
     const dashboardCards = [
         { title: "Total Revenue", value: currency + dashboardData.totalRevenue || "0",icon: CircleDollarSignIcon },
-        {title:"Total Revenue", value: currency + dashboardData.totalRevenue || "0", icon: CircleDollarSignIcon},
+        {title:"Total Bookings", value:dashboardData.totalBookings || "0", icon: ChartLineIcon},
         {title:"Active Shows", value: dashboardData.activeShows.length || "0", icon: PlayCircleIcon},
         {title:"Total Users", value: dashboardData.totalUser || "0", icon: UserIcon}
     ]
@@ -91,7 +91,7 @@ const Dashboard = () => {
                     <p className='text-lg font-medium'>{currency} {show.showPrice}</p>
                     <p className='flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1'>
                         <StarIcon className='w-4 h-4 text-primary fill-primary'/>
-                        {show.movie.vote_average.toFixed(1)}
+                        {show.movie.vote_average ? show.movie.vote_average.toFixed(1) : "N/A"}
                     </p>
                 </div>
                 <p className='px-2 pt-2 text-sm text-gray-500'>

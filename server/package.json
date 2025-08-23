@@ -24,6 +24,5 @@
     "stripe": "^18.4.0",
     "svix": "^1.73.0"
   },
-  "devDependencies": {},
   "description": ""
 }
