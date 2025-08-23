@@ -26,7 +26,7 @@ app.use('/api/stripe', express.raw({type : 'application/json'}), stripeWebhooks)
 //Middleware
 app.use(express.json())
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin:"https://filmbook-six.vercel.app",
   credentials: true
 }));
 
